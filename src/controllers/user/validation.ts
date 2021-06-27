@@ -41,10 +41,39 @@ const signUp = {
   },
 };
 
+const login = {
+  email: {
+    custom: {
+      errorMessage: 'email is invalid!',
+      options: (value: string) => {
+        return checkType(value, 'string');
+      },
+    },
+    exists: {
+      errorMessage: 'Please Provide email!',
+    },
+    in: [RequestParameter.BODY],
+    isEmail: true,
+  },
+  password: {
+    custom: {
+      errorMessage: 'password should be string!',
+      options: (value: string) => {
+        return checkType(value, 'string');
+      },
+    },
+    exists: {
+      errorMessage: 'Please Provide password!',
+    },
+    in: [RequestParameter.BODY],
+  },
+};
+
 /*
  * The location of the field, can be one or more of [body, cookies, headers, params, query].
  * If omitted, all request locations will be checked
  * */
 export default Object.freeze({
+  login,
   signUp,
 });

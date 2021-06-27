@@ -60,6 +60,44 @@ class UserController {
       next(err);
     }
   }
+
+  public async login(req: Request, res: Response, next: NextFunction) {
+    const { email, password } = req.body;
+    try {
+      const user = await UserController.getInstance().userService.findUser({
+        email,
+      });
+      console.log('Check if user exists----', user);
+      if (!user.length) {
+        throw {
+          message: 'User not exist!',
+          type: 'BadRequestError',
+        };
+      }
+
+      const isMatch = await bcrypt.compare(password, user[0].password);
+      if (!isMatch) {
+        throw {
+          message: 'Incorrect Password!',
+          type: 'BadRequestError',
+        };
+      }
+
+      const payload = {
+        user: {
+          id: user[0].id,
+        },
+      };
+
+      const token = await jwt.sign(payload, 'randomString', {
+        expiresIn: 10000,
+      });
+      return res.send({ token });
+    } catch (err) {
+      console.log(err.message);
+      next(err);
+    }
+  }
 }
 
 export default UserController.getInstance();

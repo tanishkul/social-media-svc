@@ -15,4 +15,12 @@ router
     userController.signUp,
   );
 
+router
+  .route('/login')
+  .post(
+    // upload,
+    ...validationHandler(validation.login),
+    userController.login,
+  );
+
 export default router;

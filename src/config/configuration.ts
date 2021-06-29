@@ -11,7 +11,7 @@ const isMongooseDebug =
 const configurations = Object.freeze({
   apiPrefix: constants.API_PREFIX,
   env: envVars.NODE_ENV || 'dev',
-  mongo: envVars.MONGO_URL || 'mongodb+srv://m001-user:NvncCBKYQfCnQQS5@cluster0.adkbi.mongodb.net/appointment-db',
+  mongo: envVars.MONGO_URL || 'mongodb+srv://m001-user:NvncCBKYQfCnQQS5@cluster0.adkbi.mongodb.net/social-media-dbb',
   mongooseDebug: isMongooseDebug,
   port: envVars.PORT || '9000',
   swaggerDefinition: {

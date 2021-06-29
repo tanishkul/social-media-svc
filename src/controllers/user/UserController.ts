@@ -2,6 +2,8 @@ import * as bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 
+import { SUCCESS_MSG } from '../../libs/constants';
+import successHandler from '../../middlewares/successHandler';
 import { UserService } from '../../services';
 
 class UserController {
@@ -45,18 +47,10 @@ class UserController {
         });
       console.log('User created------', userCreated);
 
-      const payload = {
-        user: {
-          id: userCreated.id,
-        },
-      };
-
-      const token = await jwt.sign(payload, 'randomString', {
-        expiresIn: 10000,
-      });
-      return res.send({ token });
+      return res.send(
+        successHandler(SUCCESS_MSG.REGISTER_USER, { name, email, image: file }),
+      );
     } catch (err) {
-      console.log(err.message);
       next(err);
     }
   }
@@ -85,16 +79,22 @@ class UserController {
 
       const payload = {
         user: {
-          id: user[0].id,
+          id: user[0].originalId,
         },
       };
 
       const token = await jwt.sign(payload, 'randomString', {
         expiresIn: 10000,
       });
-      return res.send({ token });
+      return res.send(
+        successHandler(SUCCESS_MSG.LOGIN_USER, {
+          email: user[0].email,
+          id: user[0].originalId,
+          name: user[0].name,
+          token,
+        }),
+      );
     } catch (err) {
-      console.log(err.message);
       next(err);
     }
   }

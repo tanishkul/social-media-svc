@@ -27,9 +27,13 @@ export default class Database {
       });
 
       let gfs;
+      let gfs1;
       mongoose.connection.once('open', () => {
         gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
           bucketName: 'uploads',
+        });
+        gfs1 = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+          bucketName: 'posts',
         });
       });
 

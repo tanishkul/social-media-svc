@@ -19,9 +19,12 @@ export enum EnvVars {
 }
 
 export enum SUCCESS_MSG {
-  FETCH_EVENTS = 'User fetched successfully',
-  FETCH_SLOTS = 'Slots fetched successfully',
-  CREATE = 'User created successfully',
+  CREATE = 'Post created successfully',
+  REGISTER_USER = 'User registered successfully',
+  LOGIN_USER = 'User loggedIn successfully',
+  UPDATE = 'Post updated successfully',
+  DELETE = 'Post deleted successfully',
+  GET = 'Post fetched successfully',
 }
 
 export enum RequestParameter {

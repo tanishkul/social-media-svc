@@ -1,3 +1,4 @@
+import PostService from './post/PostService';
 import UserService from './user/UserService';
 
-export { UserService };
+export { PostService, UserService };

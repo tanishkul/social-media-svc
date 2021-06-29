@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 import { generateObjectId, leanObject } from '../../libs/utilities';
-import { IQueryBaseCreate } from '../entities';
+import { IQueryBaseCreate, IQueryBaseUpdate } from '../entities';
 
 export default class VersionableRepository<
   D extends mongoose.Document,
@@ -45,6 +45,60 @@ export default class VersionableRepository<
     return this.modelType
       .find(query, {}, options)
       .collation({ locale: 'en', strength: 1 })
+      .lean();
+  }
+
+  protected async update(options: IQueryBaseUpdate): Promise<D> {
+    try {
+      console.log('BaseRepository - Update:', JSON.stringify(options));
+
+      console.log('Searching for previous valid object...', options.originalId);
+
+      console.log('Invalidating previous valid object...');
+      const invalidData = await this.invalidate(options.originalId);
+      if (invalidData) {
+        const newInstance = Object.assign({}, invalidData, options);
+        newInstance['_id'] = generateObjectId();
+        delete newInstance.id;
+        delete newInstance.updatedAt;
+        delete newInstance.deletedAt;
+
+        console.log('Created new object...', newInstance);
+
+        const result = await this.modelType.create({
+          ...newInstance,
+        });
+
+        return this.assignId(leanObject(result.toObject()));
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  protected async remove(
+    id: string,
+  ): Promise<D> {
+    const result = await this.invalidate(id);
+    if (result) {
+      return result;
+    }
+    return undefined;
+  }
+
+  protected async invalidate(id: string): Promise<D> {
+    const now = new Date();
+    console.log('invalidate document', id);
+
+    const criteria = {
+      deletedAt: undefined,
+      originalId: {
+        $in: id,
+      },
+    };
+    return await this.modelType
+    // @ts-ignore
+      .findOneAndUpdate(criteria, { deletedAt: now }, { new: true })
       .lean();
   }
 

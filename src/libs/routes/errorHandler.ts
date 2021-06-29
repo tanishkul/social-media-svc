@@ -1,12 +1,14 @@
 import {
   BadRequestError,
   NotFoundError,
+  UnauthorizedError,
   UnprocessableError,
 } from '../../entities/errors';
 import {
   BadRequestResponse,
   InternalServerErrorResponse,
   NotFoundResponse,
+  UnauthorizedResponse,
   UnprocessableResponse,
 } from '../../entities/responses';
 import IResponse from '../../entities/responses/IResponse';
@@ -20,6 +22,9 @@ export default function errorHandler(env: string) {
 
     let response: IResponse;
     switch (err.type) {
+      case UnauthorizedError.name:
+        response = new UnauthorizedResponse(err.data, err.message);
+        break;
       case UnprocessableError.name:
         response = new UnprocessableResponse(err.data, err.message);
         break;

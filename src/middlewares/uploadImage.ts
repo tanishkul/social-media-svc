@@ -8,17 +8,17 @@ import config from '../config/configuration';
 const storage = new GridFsStorage({
   file: (req, file) => {
     return new Promise((resolve, reject) => {
-      randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString('hex') + path.extname(file.originalname);
+      // randomBytes(16, (err, buf) => {
+      //   if (err) {
+      //     return reject(err);
+      //   }
+      //   const filename = buf.toString('hex') + path.extname(file.originalname);
         const fileInfo = {
           bucketName: 'uploads',
           filename: file.originalname,
         };
         resolve(fileInfo);
-      });
+      // });
     });
   },
   options: { useNewUrlParser: true, useUnifiedTopology: true },
